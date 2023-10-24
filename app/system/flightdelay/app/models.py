@@ -28,7 +28,7 @@ class Carriers(models.Model):
     def __str__(self):
         return '{}, {}, {}'.format(self.carrier, self.carrier_name)
     
-class Flights(models.Model):
+class DatasetRaw(models.Model):
     id = models.AutoField(primary_key=True)
     year = models.IntegerField(null=True, blank=True)
     month = models.IntegerField(null=True, blank=True)
@@ -53,7 +53,69 @@ class Flights(models.Model):
     objects = DataFrameManager()
 
     class Meta:
-        db_table = "flights"
+        db_table = "dataset_raw"
+    
+    def __str__(self):
+        return '{}, {}, {}, {}'.format(self.year, self.month, self.carrier, self.airport)
+    
+    
+class DatasetNull(models.Model):
+    id = models.AutoField(primary_key=True)
+    year = models.IntegerField(null=True, blank=True)
+    month = models.IntegerField(null=True, blank=True)
+    carrier = models.TextField(null=True, blank=True)
+    airport = models.TextField(null=True, blank=True)
+    arr_flights = models.FloatField(null=True, blank=True)
+    arr_del15 = models.FloatField(null=True, blank=True)
+    carrier_ct = models.FloatField(null=True, blank=True)
+    weather_ct = models.FloatField(null=True, blank=True)
+    nas_ct = models.FloatField(null=True, blank=True)
+    security_ct = models.FloatField(null=True, blank=True)
+    late_aircraft_ct = models.FloatField(null=True, blank=True)
+    arr_cancelled = models.FloatField(null=True, blank=True)
+    arr_diverted = models.FloatField(null=True, blank=True)
+    arr_delay = models.FloatField(null=True, blank=True)
+    carrier_delay = models.FloatField(null=True, blank=True)
+    weather_delay = models.FloatField(null=True, blank=True)
+    nas_delay = models.FloatField(null=True, blank=True)
+    security_delay = models.FloatField(null=True, blank=True)
+    late_aircraft_delay = models.FloatField(null=True, blank=True)
+    
+    objects = DataFrameManager()
+
+    class Meta:
+        db_table = "dataset_null"
+    
+    def __str__(self):
+        return '{}, {}, {}, {}'.format(self.year, self.month, self.carrier, self.airport)
+    
+    
+class DatasetClean(models.Model):
+    id = models.AutoField(primary_key=True)
+    year = models.IntegerField(null=True, blank=True)
+    month = models.IntegerField(null=True, blank=True)
+    carrier = models.TextField(null=True, blank=True)
+    airport = models.TextField(null=True, blank=True)
+    arr_flights = models.FloatField(null=True, blank=True)
+    arr_del15 = models.FloatField(null=True, blank=True)
+    carrier_ct = models.FloatField(null=True, blank=True)
+    weather_ct = models.FloatField(null=True, blank=True)
+    nas_ct = models.FloatField(null=True, blank=True)
+    security_ct = models.FloatField(null=True, blank=True)
+    late_aircraft_ct = models.FloatField(null=True, blank=True)
+    arr_cancelled = models.FloatField(null=True, blank=True)
+    arr_diverted = models.FloatField(null=True, blank=True)
+    arr_delay = models.FloatField(null=True, blank=True)
+    carrier_delay = models.FloatField(null=True, blank=True)
+    weather_delay = models.FloatField(null=True, blank=True)
+    nas_delay = models.FloatField(null=True, blank=True)
+    security_delay = models.FloatField(null=True, blank=True)
+    late_aircraft_delay = models.FloatField(null=True, blank=True)
+    
+    objects = DataFrameManager()
+
+    class Meta:
+        db_table = "dataset_clean"
     
     def __str__(self):
         return '{}, {}, {}'.format(self.id)

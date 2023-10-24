@@ -137,18 +137,25 @@
                       </li>
 
                       <li class="menu-item">
-                        <a href="{% url 'flights' %}" class="menu-link">
-                          <div data-i18n="Flights">Flights</div>
+                        <a href="{% url 'dataset-raw' %}" class="menu-link">
+                          <div data-i18n="Dataset">Dataset</div>
                         </a>
                       </li>
                     </ul>
                   </li>
+                </li>
+                <li class="menu-item">
+                  <a href="{% url 'dataset-clean' %}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-circle"></i>
+                    <div data-i18n="Cleaning">Cleaning</div>
+                  </a>
+                </li>
                   <li class="menu-item">
                     <a href="{% url 'classifier' %}" class="menu-link">
                       <i class="menu-icon tf-icons bx bx-circle"></i>
                       <div data-i18n="Classifier">Classifier</div>
                     </a>
-                  </li>
+               
                   <li class="menu-item">
                     <a href="{% url 'prediction' %}" class="menu-link">
                       <i class="menu-icon tf-icons bx bx-circle"></i>

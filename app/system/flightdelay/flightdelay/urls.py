@@ -22,12 +22,8 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'airports', appViews.AirportsViewSet)
 router.register(r'carriers', appViews.CarriersViewSet)
-router.register(r'flights', appViews.FlightsViewSet)
-
-
-urlpatterns = [
-    path('', views.dashboard, name="dashboard"),
-]
+router.register(r'dataset-raw', appViews.DatasetRawViewSet)
+router.register(r'dataset-clean', appViews.DatasetCleanViewSet)
 
 urlpatterns = [
     path('', views.dashboard, name="dashboard"),

@@ -1,0 +1,145 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+  <h4 class="py-3 breadcrumb-wrapper mb-4">
+    <span class="text-muted fw-light">Data </span> Flights
+  </h4>
+  <div class="card">
+    <h5 class="card-header">Dataset Null</h5>
+    <div class="card-body">
+      <div class="table-responsive text-nowrap">
+        <table class="table" id="dtDataNull">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>year</th>
+              <th>month</th>
+              <th>carrier</th>
+              <th>airport</th>
+              <th>arr_flights</th>
+              <th>arr_del15</th>
+              <th>carrier_ct</th>
+              <th>weather_ct</th>
+              <th>nas_ct</th>
+              <th>security_ct</th>
+              <th>late_aircraft_ct</th>
+              <th>arr_cancelled</th>
+              <th>arr_diverted</th>
+              <th>arr_delay</th>
+              <th>carrier_delay</th>
+              <th>weather_delay</th>
+              <th>nas_delay</th>
+              <th>security_delay</th>
+              <th>late_aircraft_delay</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h5 class="card-header">Dataset Duplicate</h5>
+    <div class="card-body">
+      <div class="table-responsive text-nowrap">
+        <table class="table" id="dtDataDuplicate">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>year</th>
+              <th>month</th>
+              <th>carrier</th>
+              <th>airport</th>
+              <th>arr_flights</th>
+              <th>arr_del15</th>
+              <th>carrier_ct</th>
+              <th>weather_ct</th>
+              <th>nas_ct</th>
+              <th>security_ct</th>
+              <th>late_aircraft_ct</th>
+              <th>arr_cancelled</th>
+              <th>arr_diverted</th>
+              <th>arr_delay</th>
+              <th>carrier_delay</th>
+              <th>weather_delay</th>
+              <th>nas_delay</th>
+              <th>security_delay</th>
+              <th>late_aircraft_delay</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h5 class="card-header">Dataset Clean</h5>
+    <div class="card-body">
+      <div class="table-responsive text-nowrap">
+        <table class="table" id="dtFlights">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>year</th>
+              <th>month</th>
+              <th>carrier</th>
+              <th>airport</th>
+              <th>arr_flights</th>
+              <th>arr_del15</th>
+              <th>carrier_ct</th>
+              <th>weather_ct</th>
+              <th>nas_ct</th>
+              <th>security_ct</th>
+              <th>late_aircraft_ct</th>
+              <th>arr_cancelled</th>
+              <th>arr_diverted</th>
+              <th>arr_delay</th>
+              <th>carrier_delay</th>
+              <th>weather_delay</th>
+              <th>nas_delay</th>
+              <th>security_delay</th>
+              <th>late_aircraft_delay</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %} {% block js %}
+<script>
+  window.addEventListener("DOMContentLoaded", (event) => {
+    const dtFlights = document.getElementById("dtFlights");
+    if (dtFlights) {
+      $("#dtFlights").DataTable({
+        responsive: true,
+        serverSide: true,
+        processing: true,
+        ajax: "/api/dataset-clean/?format=datatables",
+        columns: [
+          { data: "id" },
+          { data: "year" },
+          { data: "month" },
+          { data: "carrier" },
+          { data: "airport" },
+          { data: "arr_flights" },
+          { data: "arr_del15" },
+          { data: "carrier_ct" },
+          { data: "weather_ct" },
+          { data: "nas_ct" },
+          { data: "security_ct" },
+          { data: "late_aircraft_ct" },
+          { data: "arr_cancelled" },
+          { data: "arr_diverted" },
+          { data: "arr_delay" },
+          { data: "carrier_delay" },
+          { data: "weather_delay" },
+          { data: "nas_delay" },
+          { data: "security_delay" },
+          { data: "late_aircraft_delay" },
+        ],
+      });
+    }
+  });
+</script>
+{% endblock js%}
