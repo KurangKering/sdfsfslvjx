@@ -8,4 +8,5 @@ urlpatterns = [
     path('dataset-clean', views.dataset_clean, name="dataset-clean"),
     path('classifier', views.classifier, name="classifier"),
     path('prediction', views.prediction, name="prediction"),
+    path('json_dataset_clean', views.json_dataset_clean, name="json_dataset_clean"),
 ]

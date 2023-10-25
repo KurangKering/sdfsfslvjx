@@ -5,6 +5,9 @@ from .serializers import *
 from rest_framework import filters
 from django.db.models import Q
 import pandas as pd
+import json
+from django.http import JsonResponse
+
 
 # Create your views here.
 
@@ -17,59 +20,31 @@ def carriers(request):
 def dataset_raw(request):
 	return render(request, 'dataset-raw.html')
 
+def json_dataset_clean(request):
+    # process cleaning dataset and showing the output
+
+    dataset_raw = DatasetRaw.objects.all()
+    df = dataset_raw.to_dataframe()
+    df_null = df[df.isna().any(axis=1)]
+    df_non_null =df.dropna(axis=0, how='any', inplace=False)
+    df_duplicate = df_non_null[df_non_null.duplicated()]
+    df_clean = df_non_null[~df_non_null.duplicated()]
+    dataset_null_json = json.loads(df_null.to_json(orient="records"))
+    dataset_duplicate_json = json.loads(df_duplicate.to_json(orient="records"))
+    dataset_clean_json = json.loads(df_clean.to_json(orient="records"))
+
+    success = 1
+    context = {
+        "dataset_null": dataset_null_json,
+        "dataset_duplicate": dataset_duplicate_json,
+        "dataset_clean": dataset_clean_json,
+        'success': success
+    }
+    return JsonResponse(context, safe=False)
+
+
 def dataset_clean(request):
-	# process cleaning dataset and showing the output
 
-    df = DatasetRaw.objects.all()
-    df1 = df.to_dataframe()
-    df1 = df[df.isna().any(axis=1)]
-
-
-    data = [DatasetNull(
-        id = models.AutoField(primary_key=True)
-        year = models.IntegerField(null=True, blank=True)
-        month = models.IntegerField(null=True, blank=True)
-        carrier = models.TextField(null=True, blank=True)
-        airport = models.TextField(null=True, blank=True)
-        arr_flights = models.FloatField(null=True, blank=True)
-        arr_del15 = models.FloatField(null=True, blank=True)
-        carrier_ct = models.FloatField(null=True, blank=True)
-        weather_ct = models.FloatField(null=True, blank=True)
-        nas_ct = models.FloatField(null=True, blank=True)
-        security_ct = models.FloatField(null=True, blank=True)
-        late_aircraft_ct = models.FloatField(null=True, blank=True)
-        arr_cancelled = models.FloatField(null=True, blank=True)
-        arr_diverted = models.FloatField(null=True, blank=True)
-        arr_delay = models.FloatField(null=True, blank=True)
-        carrier_delay = models.FloatField(null=True, blank=True)
-        weather_delay = models.FloatField(null=True, blank=True)
-        nas_delay = models.FloatField(null=True, blank=True)
-        security_delay = models.FloatField(null=True, blank=True)
-        late_aircraft_delay = models.FloatField(null=True, blank=True)
-          
-          age=dataset.age,
-                                                sex=dataset.sex,
-                                                steroid=dataset.steroid,
-                                                antivirals=dataset.antivirals,
-                                                fatigue=dataset.fatigue,
-                                                malaise=dataset.malaise,
-                                                anorexia=dataset.anorexia,
-                                                liver_big=dataset.liver_big,
-                                                liver_firm=dataset.liver_firm,
-                                                spleen_palpable=dataset.spleen_palpable,
-                                                spiders=dataset.spiders,
-                                                ascites=dataset.ascites,
-                                                varices=dataset.varices,
-                                                bilirubin=dataset.bilirubin,
-                                                alk_posphate=dataset.alk_posphate,
-                                                sgot=dataset.sgot,
-                                                albumin=dataset.albumin,
-                                                protime=dataset.protime,
-                                                histology=dataset.histology,
-                                                kelas=dataset.kelas, ) for dataset in df1.itertuples()]
-
-    DatasetRaw.objects.bulk_create()
-    pass
     return render(request, 'dataset-clean.html')
 
 def preprocessing(request):
