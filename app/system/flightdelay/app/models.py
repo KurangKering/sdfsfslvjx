@@ -32,8 +32,8 @@ class DatasetRaw(models.Model):
     id = models.AutoField(primary_key=True)
     year = models.IntegerField(null=True, blank=True)
     month = models.IntegerField(null=True, blank=True)
-    carrier = models.TextField(null=True, blank=True)
-    airport = models.TextField(null=True, blank=True)
+    carrier = models.ForeignKey(Carriers, on_delete=models.CASCADE, blank=True, null=True, db_column='carrier')
+    airport = models.ForeignKey(Airports, on_delete=models.CASCADE, null=True, blank=True, db_column='airport')
     arr_flights = models.FloatField(null=True, blank=True)
     arr_del15 = models.FloatField(null=True, blank=True)
     carrier_ct = models.FloatField(null=True, blank=True)
@@ -56,7 +56,7 @@ class DatasetRaw(models.Model):
         db_table = "dataset_raw"
     
     def __str__(self):
-        return '{}, {}, {}, {}'.format(self.year, self.month, self.carrier, self.airport)
+        return '{}, {}, {}, {}'.format(self.year, self.month, self.carrier.carrier, self.airport.airport)
     
     
 class DatasetNull(models.Model):

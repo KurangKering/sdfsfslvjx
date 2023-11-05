@@ -7,7 +7,7 @@ from django.db.models import Q
 import pandas as pd
 import json
 from django.http import JsonResponse
-
+from app import library
 
 # Create your views here.
 
@@ -22,24 +22,7 @@ def dataset_raw(request):
 
 def json_dataset_clean(request):
     # process cleaning dataset and showing the output
-
-    dataset_raw = DatasetRaw.objects.all()
-    df = dataset_raw.to_dataframe()
-    df_null = df[df.isna().any(axis=1)]
-    df_non_null =df.dropna(axis=0, how='any', inplace=False)
-    df_duplicate = df_non_null[df_non_null.duplicated()]
-    df_clean = df_non_null[~df_non_null.duplicated()]
-    dataset_null_json = json.loads(df_null.to_json(orient="records"))
-    dataset_duplicate_json = json.loads(df_duplicate.to_json(orient="records"))
-    dataset_clean_json = json.loads(df_clean.to_json(orient="records"))
-
-    success = 1
-    context = {
-        "dataset_null": dataset_null_json,
-        "dataset_duplicate": dataset_duplicate_json,
-        "dataset_clean": dataset_clean_json,
-        'success': success
-    }
+    context = library.cleaning_dataset()
     return JsonResponse(context, safe=False)
 
 

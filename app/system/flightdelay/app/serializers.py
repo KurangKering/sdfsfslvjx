@@ -16,15 +16,18 @@ class CarriersSerializer(serializers.ModelSerializer):
         )
 
 class DatasetRawSerializer(serializers.ModelSerializer):
+    carrier = serializers.CharField(source='carrier.carrier', read_only=True)
+    carrier_name = serializers.CharField(source='carrier.carrier_name', read_only=True)
+    airport = serializers.CharField(source='airport.airport', read_only=True)
+    airport_name = serializers.CharField(source='airport.airport_name', read_only=True)
+
     class Meta:
         model = DatasetRaw
-        fields = (
-            'year', 'month', 'carrier', 'carrier_name', 'airport', 'airport_name', 'arr_flights', 'arr_del15', 'carrier_ct', 'weather_ct', 'nas_ct', 'security_ct', 'late_aircraft_ct', 'arr_cancelled', 'arr_diverted', 'arr_delay', 'carrier_delay', 'weather_delay', 'nas_delay', 'security_delay', 'late_aircraft_delay')
+        fields = '__all__'
 
 
 
 class DatasetCleanSerializer(serializers.ModelSerializer):
     class Meta:
         model = DatasetClean
-        fields = (
-            'id', 'year', 'month', 'carrier', 'airport', 'arr_flights', 'arr_del15', 'carrier_ct', 'weather_ct', 'nas_ct', 'security_ct', 'late_aircraft_ct', 'arr_cancelled', 'arr_diverted', 'arr_delay', 'carrier_delay', 'weather_delay', 'nas_delay', 'security_delay', 'late_aircraft_delay')
+        fields = '__all__'
