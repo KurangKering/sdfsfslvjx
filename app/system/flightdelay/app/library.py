@@ -1,5 +1,13 @@
 from app.models import *
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_squared_error
 import json
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import ExtraTreesRegressor
+
 
 
 def cleaning_dataset():
@@ -22,3 +30,143 @@ def cleaning_dataset():
     }
 
     return context
+
+def dataset_clean():
+    return DatasetClean.objects.all().to_dataframe()
+
+
+def random_forest_regressor(dataset_clean):
+    encoder = LabelEncoder()
+    df_1 = dataset_clean.copy()
+    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
+    df_1['airport'] = encoder.fit_transform(df_1['airport'])
+    x = df_1.drop('late_aircraft_delay', axis=1)
+    y = df_1['late_aircraft_delay']
+    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
+    RandomForestRegressorModel = RandomForestRegressor(n_estimators=100,max_depth=5, random_state=33)
+    RandomForestRegressorModel.fit(x_train, y_train)
+
+    train_score = RandomForestRegressorModel.score(x_train, y_train)
+    test_score = RandomForestRegressorModel.score(x_test, y_test)
+    y_pred = RandomForestRegressorModel.predict(x_test)
+    MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
+
+    context = {
+        'train_score': train_score,
+        'test_score': test_score,
+        'y_test' : y_test.tolist(),
+        'y_pred' : y_pred.tolist(),
+        'MSEValue': MSEValue
+    }
+
+    return context
+
+def linear_regression(dataset_clean):
+    encoder = LabelEncoder()
+    df_1 = dataset_clean.copy()
+    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
+    df_1['airport'] = encoder.fit_transform(df_1['airport'])
+    x = df_1.drop('late_aircraft_delay', axis=1)
+    y = df_1['late_aircraft_delay']
+    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
+    linear_regression = LinearRegression()
+    linear_regression.fit(x_train, y_train)
+    train_score = linear_regression.score(x_train, y_train)
+    test_score = linear_regression.score(x_test, y_test)
+    y_pred = linear_regression.predict(x_test)
+    MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
+
+    context = {
+        'train_score': train_score,
+        'test_score': test_score,
+        'y_test' : y_test.tolist(),
+        'y_pred' : y_pred.tolist(),
+        'MSEValue': MSEValue
+    }
+
+    return context
+
+def linear_regression(dataset_clean):
+    encoder = LabelEncoder()
+    df_1 = dataset_clean.copy()
+    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
+    df_1['airport'] = encoder.fit_transform(df_1['airport'])
+    x = df_1.drop('late_aircraft_delay', axis=1)
+    y = df_1['late_aircraft_delay']
+    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
+    linear_regression = LinearRegression()
+    linear_regression.fit(x_train, y_train)
+    train_score = linear_regression.score(x_train, y_train)
+    test_score = linear_regression.score(x_test, y_test)
+    y_pred = linear_regression.predict(x_test)
+    MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
+
+    context = {
+        'train_score': train_score,
+        'test_score': test_score,
+        'y_test' : y_test.tolist(),
+        'y_pred' : y_pred.tolist(),
+        'MSEValue': MSEValue
+    }
+
+    return context
+
+def decision_tree_regressor(dataset_clean):
+    encoder = LabelEncoder()
+    df_1 = dataset_clean.copy()
+    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
+    df_1['airport'] = encoder.fit_transform(df_1['airport'])
+    x = df_1.drop('late_aircraft_delay', axis=1)
+    y = df_1['late_aircraft_delay']
+    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
+    decision_tree = DecisionTreeRegressor()
+    decision_tree.fit(x_train, y_train)
+    train_score = decision_tree.score(x_train, y_train)
+    test_score = decision_tree.score(x_test, y_test)
+    y_pred = decision_tree.predict(x_test)
+    MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
+
+    context = {
+        'train_score': train_score,
+        'test_score': test_score,
+        'y_test' : y_test.tolist(),
+        'y_pred' : y_pred.tolist(),
+        'MSEValue': MSEValue
+    }
+
+    return context
+
+def extra_trees_regressor(dataset_clean):
+    encoder = LabelEncoder()
+    df_1 = dataset_clean.copy()
+    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
+    df_1['airport'] = encoder.fit_transform(df_1['airport'])
+    x = df_1.drop('late_aircraft_delay', axis=1)
+    y = df_1['late_aircraft_delay']
+    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
+    extra_trees = ExtraTreesRegressor()
+    extra_trees.fit(x_train, y_train)
+    train_score = extra_trees.score(x_train, y_train)
+    test_score = extra_trees.score(x_test, y_test)
+    y_pred = extra_trees.predict(x_test)
+    MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
+
+    context = {
+        'train_score': train_score,
+        'test_score': test_score,
+        'y_test' : y_test.tolist(),
+        'y_pred' : y_pred.tolist(),
+        'MSEValue': MSEValue
+    }
+
+    return context
+
+def predict(_type, df_1):
+    if (_type == 'LR'):
+        return linear_regression(df_1)
+    if (_type == 'RFR'):
+        return random_forest_regressor(df_1)
+    if (_type == 'ETR'):
+        return extra_trees_regressor(df_1)
+    if (_type == 'DTR'):
+        return decision_tree_regressor(df_1)

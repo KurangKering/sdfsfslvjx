@@ -37,7 +37,20 @@ def cleaning(request):
 	return render(request, 'cleaning.html')
 
 def classifier(request):
-	return render(request, 'classifier.html')
+
+    return render(request, 'classifier.html')
+
+
+def json_classifier(request):
+    # LR = LinearRegression
+    # RFR = RandomForestRegressor
+    # ETR = ExtraTreesRegressor
+    # DTR = DecisionTreeRegressor
+
+    dataset_clean = library.dataset_clean()
+
+    context = library.predict(request.GET.get('type'), dataset_clean)
+    return JsonResponse(context, safe=False)
 
 def prediction(request):
 	return render(request, 'prediction.html')

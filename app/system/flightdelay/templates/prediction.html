@@ -1,5 +1,89 @@
-{% extends "base.html" %}
-{% load static %}
-{% block content %}
-welcome dued
-{% endblock content %}
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+  <h4 class="py-3 breadcrumb-wrapper mb-4">
+    <span class="text-muted fw-light">Data </span> Prediction
+  </h4>
+  <div class="row">
+  <div class="col-4">
+    <div class="card">
+        <div class="card-body">
+            <div id="growthRadialChartxx"></div>
+        </div>
+      </div>
+  </div>
+  </div>
+</div>
+{% endblock content %} {% block js %}
+<script>
+  "use strict";
+  !(function () {
+
+    let o, e, r, t, a, s;
+    s = isDarkStyle
+      ? ((o = config.colors_dark.cardColor),
+        (e = config.colors_dark.headingColor),
+        (r = config.colors_dark.textMuted),
+        (t = config.colors_dark.bodyColor),
+        (a = config.colors_dark.borderColor),
+        "dark")
+      : ((o = config.colors.cardColor),
+        (e = config.colors.headingColor),
+        (r = config.colors.textMuted),
+        (t = config.colors.bodyColor)i
+        (a = config.colors.borderColor),
+        "light")
+        ,
+      var i =
+        (null !== i && new ApexCharts(i, l).render(),
+        document.querySelector("#growthRadialChart")),
+      l = {
+        chart: {
+          height: 230,
+          fontFamily: "IBM Plex Sans",
+          type: "radialBar",
+          sparkline: { show: !0 },
+        },
+        grid: { show: !1, padding: { top: -25 } },
+        plotOptions: {
+          radialBar: {
+            size: 100,
+            startAngle: -135,
+            endAngle: 135,
+            offsetY: 10,
+            hollow: { size: "55%" },
+            track: { strokeWidth: "50%", background: o },
+            dataLabels: {
+              value: {
+                offsetY: -15,
+                color: e,
+                fontFamily: "Rubik",
+                fontWeight: 500,
+                fontSize: "26px",
+              },
+              name: { fontSize: "15px", color: t, offsetY: 24 },
+            },
+          },
+        },
+        colors: [config.colors.danger],
+        fill: {
+          type: "gradient",
+          gradient: {
+            shade: "dark",
+            type: "horizontal",
+            shadeIntensity: 0.5,
+            gradientToColors: [config.colors.primary],
+            inverseColors: !0,
+            opacityFrom: 1,
+            opacityTo: 1,
+            stops: [0, 100],
+          },
+        },
+        stroke: { dashArray: 3 },
+        series: [78],
+        labels: ["Growth"],
+      };
+    null !== i && new ApexCharts(i, l).render();
+  })();
+  
+</script>
+{% endblock js%}

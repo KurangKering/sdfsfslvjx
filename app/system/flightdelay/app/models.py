@@ -118,4 +118,5 @@ class DatasetClean(models.Model):
         db_table = "dataset_clean"
     
     def __str__(self):
-        return '{}, {}, {}'.format(self.id)
+        return '{}, {}, {}, {}'.format(self.year, self.month, self.carrier, self.airport)
+    
