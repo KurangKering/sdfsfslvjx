@@ -1,89 +1,347 @@
 {% extends "base.html" %} {% load static %} {% block content %}
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y" x-data>
   <h4 class="py-3 breadcrumb-wrapper mb-4">
     <span class="text-muted fw-light">Data </span> Prediction
   </h4>
   <div class="row">
-  <div class="col-4">
-    <div class="card">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex align-items-center justify-content-between"
+        >
+          <div class="d-flex align-items-center me-3">
+            <div class="card-title mb-0">
+              <h5 class="mb-0">Data Train</h5>
+            </div>
+          </div>
+        </div>
         <div class="card-body">
-            <div id="growthRadialChartxx"></div>
+          <div class="table-responsive text-nowrap">
+            <table class="table" id="dtFlights">
+              <thead class="table-light">
+                <tr>
+                  <th>ID</th>
+                  <th>year</th>
+                  <th>month</th>
+                  <th>carrier</th>
+                  <th>airport</th>
+                  <th>arr_flights</th>
+                  <th>arr_del15</th>
+                  <th>carrier_ct</th>
+                  <th>weather_ct</th>
+                  <th>nas_ct</th>
+                  <th>security_ct</th>
+                  <th>late_aircraft_ct</th>
+                  <th>arr_cancelled</th>
+                  <th>arr_diverted</th>
+                  <th>arr_delay</th>
+                  <th>carrier_delay</th>
+                  <th>weather_delay</th>
+                  <th>nas_delay</th>
+                  <th>security_delay</th>
+                  <th>late_aircraft_delay</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
       </div>
-  </div>
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex align-items-center justify-content-between"
+        >
+          <div class="d-flex align-items-center me-3">
+            <div class="card-title mb-0">
+              <h5 class="mb-0">Data Test</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive text-nowrap">
+            <table class="table" id="dtFlights">
+              <thead class="table-light">
+                <tr>
+                  <th>ID</th>
+                  <th>year</th>
+                  <th>month</th>
+                  <th>carrier</th>
+                  <th>airport</th>
+                  <th>arr_flights</th>
+                  <th>arr_del15</th>
+                  <th>carrier_ct</th>
+                  <th>weather_ct</th>
+                  <th>nas_ct</th>
+                  <th>security_ct</th>
+                  <th>late_aircraft_ct</th>
+                  <th>arr_cancelled</th>
+                  <th>arr_diverted</th>
+                  <th>arr_delay</th>
+                  <th>carrier_delay</th>
+                  <th>weather_delay</th>
+                  <th>nas_delay</th>
+                  <th>security_delay</th>
+                  <th>late_aircraft_delay</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex align-items-center justify-content-between"
+        >
+          <div class="d-flex align-items-center me-3">
+            <div class="card-title mb-0">
+              <h5 class="mb-0">Linear Regression</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            x-show="$store.content.LR.loading"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+
+          <div x-show="!$store.content.LR.loading" x-cloak>
+            <p>
+              Train Accuracy :
+              <span x-text="$store.content.LR.train_acc"></span>
+            </p>
+            <p>
+              Test Accuracy : <span x-text="$store.content.LR.test_acc"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex align-items-center justify-content-between"
+        >
+          <div class="d-flex align-items-center me-3">
+            <div class="card-title mb-0">
+              <h5 class="mb-0">Decision Tree Regressor</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div>
+            <p>
+              Train Accuracy :
+              <span x-text="$store.content.DTR.train_acc"></span>
+            </p>
+            <p>
+              Test Accuracy : <span x-text="$store.content.DTR.test_acc"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex align-items-center justify-content-between"
+        >
+          <div class="d-flex align-items-center me-3">
+            <div class="card-title mb-0">
+              <h5 class="mb-0">Random Forest Regressor</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div>
+            <p>
+              Train Accuracy :
+              <span x-text="$store.content.RFR.train_acc"></span>
+            </p>
+            <p>
+              Test Accuracy : <span x-text="$store.content.RFR.test_acc"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex align-items-center justify-content-between"
+        >
+          <div class="d-flex align-items-center me-3">
+            <div class="card-title mb-0">
+              <h5 class="mb-0">Extra Trees Regressor</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div>
+            <p>
+              Train Accuracy :
+              <span x-text="$store.content.ETR.train_acc"></span>
+            </p>
+            <p>
+              Test Accuracy : <span x-text="$store.content.ETR.test_acc"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock content %} {% block js %}
 <script>
-  "use strict";
-  !(function () {
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("content", {
+      LR: {
+        loading: true,
+        train_acc: "",
+        test_acc: "",
+      },
+      RFR: {
+        train_acc: "",
+        test_acc: "",
+      },
+      ETR: {
+        train_acc: "",
+        test_acc: "",
+      },
+      DTR: {
+        train_acc: "",
+        test_acc: "",
+      },
+    });
+  });
 
-    let o, e, r, t, a, s;
-    s = isDarkStyle
-      ? ((o = config.colors_dark.cardColor),
-        (e = config.colors_dark.headingColor),
-        (r = config.colors_dark.textMuted),
-        (t = config.colors_dark.bodyColor),
-        (a = config.colors_dark.borderColor),
-        "dark")
-      : ((o = config.colors.cardColor),
-        (e = config.colors.headingColor),
-        (r = config.colors.textMuted),
-        (t = config.colors.bodyColor)i
-        (a = config.colors.borderColor),
-        "light")
-        ,
-      var i =
-        (null !== i && new ApexCharts(i, l).render(),
-        document.querySelector("#growthRadialChart")),
-      l = {
-        chart: {
-          height: 230,
-          fontFamily: "IBM Plex Sans",
-          type: "radialBar",
-          sparkline: { show: !0 },
-        },
-        grid: { show: !1, padding: { top: -25 } },
-        plotOptions: {
-          radialBar: {
-            size: 100,
-            startAngle: -135,
-            endAngle: 135,
-            offsetY: 10,
-            hollow: { size: "55%" },
-            track: { strokeWidth: "50%", background: o },
-            dataLabels: {
-              value: {
-                offsetY: -15,
-                color: e,
-                fontFamily: "Rubik",
-                fontWeight: 500,
-                fontSize: "26px",
-              },
-              name: { fontSize: "15px", color: t, offsetY: 24 },
-            },
-          },
-        },
-        colors: [config.colors.danger],
-        fill: {
-          type: "gradient",
-          gradient: {
-            shade: "dark",
-            type: "horizontal",
-            shadeIntensity: 0.5,
-            gradientToColors: [config.colors.primary],
-            inverseColors: !0,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [0, 100],
-          },
-        },
-        stroke: { dashArray: 3 },
-        series: [78],
-        labels: ["Growth"],
-      };
-    null !== i && new ApexCharts(i, l).render();
-  })();
+  
+  let dtFlights;
+
+  function loadJson() {
+    const url = "{% url 'json_dataset_clean' %}";
+    return axios
+    .get(url)
+    .then(response => response);
+  }
+
+  window.addEventListener("DOMContentLoaded", (event) => {
+    loadJson().then((response) => {
+      $("#dtDataNull").DataTable({
+        data: response.data.dataset_null,
+        columns: [
+          { data: "id" },
+          { data: "year" },
+          { data: "month" },
+          { data: "carrier__carrier" },
+          { data: "airport__airport" },
+          { data: "arr_flights" },
+          { data: "arr_del15" },
+          { data: "carrier_ct" },
+          { data: "weather_ct" },
+          { data: "nas_ct" },
+          { data: "security_ct" },
+          { data: "late_aircraft_ct" },
+          { data: "arr_cancelled" },
+          { data: "arr_diverted" },
+          { data: "arr_delay" },
+          { data: "carrier_delay" },
+          { data: "weather_delay" },
+          { data: "nas_delay" },
+          { data: "security_delay" },
+          { data: "late_aircraft_delay" },
+        ],
+      });
+      $("#dtDataDuplicate").DataTable({
+        data: response.data.dataset_duplicate,
+        columns: [
+          { data: "id" },
+          { data: "year" },
+          { data: "month" },
+          { data: "carrier__carrier" },
+          { data: "airport__airport" },
+          { data: "arr_flights" },
+          { data: "arr_del15" },
+          { data: "carrier_ct" },
+          { data: "weather_ct" },
+          { data: "nas_ct" },
+          { data: "security_ct" },
+          { data: "late_aircraft_ct" },
+          { data: "arr_cancelled" },
+          { data: "arr_diverted" },
+          { data: "arr_delay" },
+          { data: "carrier_delay" },
+          { data: "weather_delay" },
+          { data: "nas_delay" },
+          { data: "security_delay" },
+          { data: "late_aircraft_delay" },
+        ],
+      });
+      $("#dtFlights").DataTable({
+        data: response.data.dataset_clean,
+        columns: [
+          { data: "id" },
+          { data: "year" },
+          { data: "month" },
+          { data: "carrier__carrier" },
+          { data: "airport__airport" },
+          { data: "arr_flights" },
+          { data: "arr_del15" },
+          { data: "carrier_ct" },
+          { data: "weather_ct" },
+          { data: "nas_ct" },
+          { data: "security_ct" },
+          { data: "late_aircraft_ct" },
+          { data: "arr_cancelled" },
+          { data: "arr_diverted" },
+          { data: "arr_delay" },
+          { data: "carrier_delay" },
+          { data: "weather_delay" },
+          { data: "nas_delay" },
+          { data: "security_delay" },
+          { data: "late_aircraft_delay" },
+        ],
+      });
+
+    })
+    .then(() => {
+      Alpine.store('is_loaded', true);
+    })
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    predict("LR").then((response) => {
+      Alpine.store("content").LR.train_acc = response.data.train_score;
+      Alpine.store("content").LR.test_acc = response.data.test_score;
+      Alpine.store("content").LR.loading = false;
+    });
+    predict("RFR").then((response) => {
+      Alpine.store("content").RFR.train_acc = response.data.train_score;
+      Alpine.store("content").RFR.test_acc = response.data.test_score;
+    });
+    predict("ETR").then((response) => {
+      Alpine.store("content").RFR.train_acc = response.data.train_score;
+      Alpine.store("content").RFR.test_acc = response.data.test_score;
+    });
+    predict("DTR").then((response) => {
+      Alpine.store("content").RFR.train_acc = response.data.train_score;
+      Alpine.store("content").RFR.test_acc = response.data.test_score;
+    });
+  });
+
+  async function predict(type) {
+    const url = `{% url 'json_predict' %}?type=${type}`;
+    return await axios.get(url).then((response) => {
+      console.log(response);
+      return Promise.resolve(response);
+    });
+  }
   
 </script>
 {% endblock js%}

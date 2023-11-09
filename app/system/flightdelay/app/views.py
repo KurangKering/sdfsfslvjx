@@ -41,7 +41,7 @@ def classifier(request):
     return render(request, 'classifier.html')
 
 
-def json_classifier(request):
+def json_predict(request):
     # LR = LinearRegression
     # RFR = RandomForestRegressor
     # ETR = ExtraTreesRegressor

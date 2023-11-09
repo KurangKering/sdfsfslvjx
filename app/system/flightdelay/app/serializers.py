@@ -28,6 +28,11 @@ class DatasetRawSerializer(serializers.ModelSerializer):
 
 
 class DatasetCleanSerializer(serializers.ModelSerializer):
+    carrier = serializers.CharField(source='carrier.carrier', read_only=True)
+    carrier_name = serializers.CharField(source='carrier.carrier_name', read_only=True)
+    airport = serializers.CharField(source='airport.airport', read_only=True)
+    airport_name = serializers.CharField(source='airport.airport_name', read_only=True)
+    
     class Meta:
         model = DatasetClean
         fields = '__all__'

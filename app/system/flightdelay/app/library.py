@@ -12,7 +12,7 @@ from sklearn.ensemble import ExtraTreesRegressor
 
 def cleaning_dataset():
     dataset_raw = DatasetRaw.objects.all()
-    df = dataset_raw.to_dataframe(fieldnames=['id', 'year', 'month', 'carrier__carrier_name', 'airport__airport_name', 'arr_flights', 'arr_del15', 'carrier_ct', 'weather_ct', 'nas_ct', 'security_ct', 'late_aircraft_ct', 'arr_cancelled', 'arr_diverted', 'arr_delay', 'carrier_delay', 'weather_delay', 'nas_delay', 'security_delay', 'late_aircraft_delay'])
+    df = dataset_raw.to_dataframe(fieldnames=['id', 'year', 'month', 'carrier__carrier', 'carrier__carrier_name', 'airport__airport_name', 'airport__airport', 'arr_flights', 'arr_del15', 'carrier_ct', 'weather_ct', 'nas_ct', 'security_ct', 'late_aircraft_ct', 'arr_cancelled', 'arr_diverted', 'arr_delay', 'carrier_delay', 'weather_delay', 'nas_delay', 'security_delay', 'late_aircraft_delay'])
     df_null = df[df.isna().any(axis=1)]
     df_non_null =df.dropna(axis=0, how='any', inplace=False)
     df_duplicate = df_non_null[df_non_null.duplicated()]
@@ -32,14 +32,16 @@ def cleaning_dataset():
     return context
 
 def dataset_clean():
-    return DatasetClean.objects.all().to_dataframe()
+    df = DatasetClean.objects.all().to_dataframe()
+    encoder = LabelEncoder()
+    df['carrier'] = encoder.fit_transform(df['carrier'])
+    df['airport'] = encoder.fit_transform(df['airport'])
+    return df
+
 
 
 def random_forest_regressor(dataset_clean):
-    encoder = LabelEncoder()
-    df_1 = dataset_clean.copy()
-    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
-    df_1['airport'] = encoder.fit_transform(df_1['airport'])
+    df_1 = dataset_clean
     x = df_1.drop('late_aircraft_delay', axis=1)
     y = df_1['late_aircraft_delay']
     x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
@@ -62,10 +64,7 @@ def random_forest_regressor(dataset_clean):
     return context
 
 def linear_regression(dataset_clean):
-    encoder = LabelEncoder()
-    df_1 = dataset_clean.copy()
-    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
-    df_1['airport'] = encoder.fit_transform(df_1['airport'])
+    df_1 = dataset_clean
     x = df_1.drop('late_aircraft_delay', axis=1)
     y = df_1['late_aircraft_delay']
     x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
@@ -87,10 +86,7 @@ def linear_regression(dataset_clean):
     return context
 
 def linear_regression(dataset_clean):
-    encoder = LabelEncoder()
-    df_1 = dataset_clean.copy()
-    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
-    df_1['airport'] = encoder.fit_transform(df_1['airport'])
+    df_1 = dataset_clean
     x = df_1.drop('late_aircraft_delay', axis=1)
     y = df_1['late_aircraft_delay']
     x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
@@ -112,10 +108,7 @@ def linear_regression(dataset_clean):
     return context
 
 def decision_tree_regressor(dataset_clean):
-    encoder = LabelEncoder()
-    df_1 = dataset_clean.copy()
-    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
-    df_1['airport'] = encoder.fit_transform(df_1['airport'])
+    df_1 = dataset_clean
     x = df_1.drop('late_aircraft_delay', axis=1)
     y = df_1['late_aircraft_delay']
     x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
@@ -136,14 +129,7 @@ def decision_tree_regressor(dataset_clean):
 
     return context
 
-def extra_trees_regressor(dataset_clean):
-    encoder = LabelEncoder()
-    df_1 = dataset_clean.copy()
-    df_1['carrier'] = encoder.fit_transform(df_1['carrier'])
-    df_1['airport'] = encoder.fit_transform(df_1['airport'])
-    x = df_1.drop('late_aircraft_delay', axis=1)
-    y = df_1['late_aircraft_delay']
-    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
+def extra_trees_regressor(x_train,x_test,y_train,y_test):
     extra_trees = ExtraTreesRegressor()
     extra_trees.fit(x_train, y_train)
     train_score = extra_trees.score(x_train, y_train)
@@ -170,3 +156,10 @@ def predict(_type, df_1):
         return extra_trees_regressor(df_1)
     if (_type == 'DTR'):
         return decision_tree_regressor(df_1)
+
+
+def split_data(dataset_clean):
+    df_1 = dataset_clean
+    x = df_1.drop('late_aircraft_delay', axis=1)
+    y = df_1['late_aircraft_delay']
+    return train_test_split(x,y,test_size=20,random_state=44)

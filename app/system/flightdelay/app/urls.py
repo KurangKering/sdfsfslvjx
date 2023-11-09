@@ -9,5 +9,5 @@ urlpatterns = [
     path('classifier', views.classifier, name="classifier"),
     path('prediction', views.prediction, name="prediction"),
     path('json_dataset_clean', views.json_dataset_clean, name="json_dataset_clean"),
-    path('json_classifier', views.json_classifier, name="json_classifier"),
+    path('json_predict', views.json_predict, name="json_predict"),
 ]
