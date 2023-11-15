@@ -8,6 +8,9 @@ import pandas as pd
 import json
 from django.http import JsonResponse
 from app import library
+import time
+from sklearn.preprocessing import LabelEncoder
+
 
 # Create your views here.
 
@@ -40,17 +43,53 @@ def classifier(request):
 
     return render(request, 'classifier.html')
 
-
 def json_predict(request):
     # LR = LinearRegression
     # RFR = RandomForestRegressor
     # ETR = ExtraTreesRegressor
     # DTR = DecisionTreeRegressor
 
+    start_time = time.time()
     dataset_clean = library.dataset_clean()
+    encoder = LabelEncoder()
+    dataset_clean['carrier'] = encoder.fit_transform(dataset_clean['carrier'])
+    dataset_clean['airport'] = encoder.fit_transform(dataset_clean['airport'])
+    train_test = library.split_data(dataset_clean)
+    context = library.predict(request.GET.get('type'), train_test)
+    execution_time = round(time.time() - start_time, 2) 
 
-    context = library.predict(request.GET.get('type'), dataset_clean)
+    context['execution_time'] = execution_time
     return JsonResponse(context, safe=False)
+
+def json_split_data(request):
+    dataset_clean = library.dataset_clean()
+    x_train,x_test,y_train,y_test = library.split_data(dataset_clean)
+    x_train,x_test,y_train,y_test = library.split_data(dataset_clean)
+    data_train = x_train.merge(y_train.to_frame(), left_index=True, right_index=True)
+    data_test = x_test.merge(y_test.to_frame(), left_index=True, right_index=True)
+    data_train = json.loads(data_train.to_json(orient="records"))
+    data_test = json.loads(data_test.to_json(orient="records"))
+    context = {
+         'data_train' : data_train,
+         'data_test' : data_test,
+    }
+    return JsonResponse(context, safe=False)
+
+
+def statistik(request):
+    return render(request, 'statistik.html')
+
+def json_statistik(request):
+     
+     dataset = library.dataset_clean()
+     flights_per_month = library.get_plot_flights_per_month(dataset)
+     most_number_of_flights = library.get_plot_most_number_of_flights(dataset)
+
+     context = {
+          "flights_per_month": flights_per_month,
+          "most_number_of_flights": most_number_of_flights
+     }
+     return JsonResponse(context, safe=False)
 
 def prediction(request):
 	return render(request, 'prediction.html')

@@ -7,6 +7,11 @@ from sklearn.metrics import mean_squared_error
 import json
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import ExtraTreesRegressor
+from django.db.models import F
+import time
+import matplotlib.pyplot as plt
+import seaborn as sns
+from io import StringIO
 
 
 
@@ -32,42 +37,33 @@ def cleaning_dataset():
     return context
 
 def dataset_clean():
-    df = DatasetClean.objects.all().to_dataframe()
-    encoder = LabelEncoder()
-    df['carrier'] = encoder.fit_transform(df['carrier'])
-    df['airport'] = encoder.fit_transform(df['airport'])
+    df = DatasetClean.objects.all()
+    df = df.to_dataframe()
     return df
 
 
 
-def random_forest_regressor(dataset_clean):
-    df_1 = dataset_clean
-    x = df_1.drop('late_aircraft_delay', axis=1)
-    y = df_1['late_aircraft_delay']
-    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
+def random_forest_regressor(train_test):
+    x_train,x_test,y_train,y_test = train_test
     RandomForestRegressorModel = RandomForestRegressor(n_estimators=100,max_depth=5, random_state=33)
     RandomForestRegressorModel.fit(x_train, y_train)
-
     train_score = RandomForestRegressorModel.score(x_train, y_train)
     test_score = RandomForestRegressorModel.score(x_test, y_test)
     y_pred = RandomForestRegressorModel.predict(x_test)
     MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
 
     context = {
-        'train_score': train_score,
-        'test_score': test_score,
+        'train_score': train_score * 100,
+        'test_score': test_score * 100,
         'y_test' : y_test.tolist(),
         'y_pred' : y_pred.tolist(),
-        'MSEValue': MSEValue
+        'MSEValue': MSEValue,
     }
 
     return context
 
-def linear_regression(dataset_clean):
-    df_1 = dataset_clean
-    x = df_1.drop('late_aircraft_delay', axis=1)
-    y = df_1['late_aircraft_delay']
-    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
+def linear_regression(train_test):
+    x_train,x_test,y_train,y_test = train_test
     linear_regression = LinearRegression()
     linear_regression.fit(x_train, y_train)
     train_score = linear_regression.score(x_train, y_train)
@@ -76,42 +72,17 @@ def linear_regression(dataset_clean):
     MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
 
     context = {
-        'train_score': train_score,
-        'test_score': test_score,
+        'train_score': train_score * 100,
+        'test_score': test_score * 100,
         'y_test' : y_test.tolist(),
         'y_pred' : y_pred.tolist(),
-        'MSEValue': MSEValue
+        'MSEValue': MSEValue,
     }
 
     return context
 
-def linear_regression(dataset_clean):
-    df_1 = dataset_clean
-    x = df_1.drop('late_aircraft_delay', axis=1)
-    y = df_1['late_aircraft_delay']
-    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
-    linear_regression = LinearRegression()
-    linear_regression.fit(x_train, y_train)
-    train_score = linear_regression.score(x_train, y_train)
-    test_score = linear_regression.score(x_test, y_test)
-    y_pred = linear_regression.predict(x_test)
-    MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
-
-    context = {
-        'train_score': train_score,
-        'test_score': test_score,
-        'y_test' : y_test.tolist(),
-        'y_pred' : y_pred.tolist(),
-        'MSEValue': MSEValue
-    }
-
-    return context
-
-def decision_tree_regressor(dataset_clean):
-    df_1 = dataset_clean
-    x = df_1.drop('late_aircraft_delay', axis=1)
-    y = df_1['late_aircraft_delay']
-    x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=20,random_state=44)
+def decision_tree_regressor(train_test):
+    x_train,x_test,y_train,y_test = train_test
     decision_tree = DecisionTreeRegressor()
     decision_tree.fit(x_train, y_train)
     train_score = decision_tree.score(x_train, y_train)
@@ -120,16 +91,17 @@ def decision_tree_regressor(dataset_clean):
     MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
 
     context = {
-        'train_score': train_score,
-        'test_score': test_score,
+        'train_score': train_score * 100,
+        'test_score': test_score * 100,
         'y_test' : y_test.tolist(),
         'y_pred' : y_pred.tolist(),
-        'MSEValue': MSEValue
+        'MSEValue': MSEValue,
     }
 
     return context
 
-def extra_trees_regressor(x_train,x_test,y_train,y_test):
+def extra_trees_regressor(train_test):
+    x_train,x_test,y_train,y_test = train_test
     extra_trees = ExtraTreesRegressor()
     extra_trees.fit(x_train, y_train)
     train_score = extra_trees.score(x_train, y_train)
@@ -138,24 +110,23 @@ def extra_trees_regressor(x_train,x_test,y_train,y_test):
     MSEValue = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
 
     context = {
-        'train_score': train_score,
-        'test_score': test_score,
+        'train_score': train_score * 100,
+        'test_score': test_score * 100,
         'y_test' : y_test.tolist(),
         'y_pred' : y_pred.tolist(),
-        'MSEValue': MSEValue
+        'MSEValue': MSEValue,
     }
-
     return context
 
-def predict(_type, df_1):
+def predict(_type, train_test):
     if (_type == 'LR'):
-        return linear_regression(df_1)
+        return linear_regression(train_test)
     if (_type == 'RFR'):
-        return random_forest_regressor(df_1)
+        return random_forest_regressor(train_test)
     if (_type == 'ETR'):
-        return extra_trees_regressor(df_1)
+        return extra_trees_regressor(train_test)
     if (_type == 'DTR'):
-        return decision_tree_regressor(df_1)
+        return decision_tree_regressor(train_test)
 
 
 def split_data(dataset_clean):
@@ -163,3 +134,27 @@ def split_data(dataset_clean):
     x = df_1.drop('late_aircraft_delay', axis=1)
     y = df_1['late_aircraft_delay']
     return train_test_split(x,y,test_size=20,random_state=44)
+
+def get_plot_flights_per_month(dataset):
+    plt.figure(layout="constrained",  )
+    sns.countplot(dataset, x='month')
+    plt.xticks(size = 5)
+    plt.yticks(size = 5)
+    plt.xlabel("Months", size = 10)
+    plt.ylabel("Frequency", size = 10)
+    imgdata = StringIO()
+    plt.savefig(imgdata, format='svg')
+    imgdata.seek(0)
+    return imgdata.getvalue()
+
+def get_plot_most_number_of_flights(dataset):
+    plt.figure(layout='constrained')
+    sns.countplot(dataset, x='carrier')
+    plt.xticks(size = 5)
+    plt.yticks(size = 5)
+    plt.xlabel("Carriers", size = 10)
+    plt.ylabel("Frequency", size = 10)
+    imgdata = StringIO()
+    plt.savefig(imgdata, format='svg')
+    imgdata.seek(0)
+    return imgdata.getvalue()

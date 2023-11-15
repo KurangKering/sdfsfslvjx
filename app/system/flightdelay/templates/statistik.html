@@ -1,0 +1,119 @@
+{% extends "base.html" %} {% load static %} {% block css %}
+<style>
+  .wrapper-plot-flighs-per-month {
+    width: 80%;
+    height: 80%;
+    margin: 0 auto;
+  }
+  .wrapper-plot-flighs-per-month > svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .wrapper-plot-most-number-of-flights {
+    width: 100%;
+    height: 100%;
+  }
+  .wrapper-plot-most-number-of-flights > svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+{% endblock css %} {% block content %}
+<div class="container-xxl flex-grow-1 container-p-y" x-data>
+  <h4 class="py-3 breadcrumb-wrapper mb-4">
+    <span class="text-muted fw-light">Data </span> Statistics
+  </h4>
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex align-items-center justify-content-between"
+        >
+          <div class="d-flex align-items-center me-3">
+            <div class="card-title mb-0">
+              <h5 class="mb-0">Number of Flights per month</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            x-show="$store.content.flights_per_month.loading"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+
+          <div
+            class="wrapper-plot wrapper-plot-flighs-per-month"
+            x-cloak
+            x-show="!$store.content.flights_per_month.loading"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex align-items-center justify-content-between"
+        >
+          <div class="d-flex align-items-center me-3">
+            <div class="card-title mb-0">
+              <h5 class="mb-0">Most Number of Flights</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            x-show="$store.content.most_number_of_flights.loading"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+
+          <div
+            class="wrapper-plot wrapper-plot-most-number-of-flights"
+            x-cloak
+            x-show="!$store.content.most_number_of_flights.loading"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock content %} {% block js %}
+  <script>
+    document.addEventListener("alpine:init", () => {
+      Alpine.store("content", {
+        flights_per_month: {
+          loading: true,
+        },
+        most_number_of_flights: {
+          loading: true,
+        },
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadJsonStatistik().then((response) => {
+        $(".wrapper-plot").html("");
+        $(".wrapper-plot-flighs-per-month").append(
+          response.data.flights_per_month
+        );
+        $(".wrapper-plot-most-number-of-flights").append(
+          response.data.most_number_of_flights
+        );
+
+        Alpine.store("content").flights_per_month.loading = false;
+        Alpine.store("content").most_number_of_flights.loading = false;
+      });
+    });
+
+    const loadJsonStatistik = () => {
+      const url = "{% url 'json_statistik' %}";
+      return axios.get(url).then((response) => response);
+    };
+  </script>
+  {% endblock js%}
+</div>

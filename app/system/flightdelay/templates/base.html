@@ -99,17 +99,16 @@
     <script src="{% static 'assets/vendor/js/helpers.js' %}"></script>
     <script src="{% static 'assets/js/config.js' %}"></script>
 
-    <script  defer src="
-    https://cdn.jsdelivr.net/npm/alpinejs@3.13.2/dist/cdn.min.js
-    "></script>
-
-    <style>
-      [x-cloak] { display: none !important; }
-    </style>
+    <script
+      defer
+      src="
+https://cdn.jsdelivr.net/npm/alpinejs@3.13.2/dist/cdn.min.js
+"
+    ></script>
   </head>
 
   <body>
-    <div 
+    <div
       class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu"
     >
       <div class="layout-container">
@@ -151,20 +150,19 @@
                       </li>
                     </ul>
                   </li>
-                </li>
-                <li class="menu-item">
-                  <a href="{% url 'dataset-clean' %}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-circle"></i>
-                    <div data-i18n="Cleaning">Cleaning</div>
-                  </a>
-                </li>
-                  {% comment %} <li class="menu-item">
-                    <a href="{% url 'classifier' %}" class="menu-link">
+                  <li class="menu-item">
+                    <a href="{% url 'dataset-clean' %}" class="menu-link">
                       <i class="menu-icon tf-icons bx bx-circle"></i>
-                      <div data-i18n="Classifier">Classifier</div>
+                      <div data-i18n="Cleaning">Cleaning</div>
                     </a>
-                  </li> {% endcomment %}
-               
+                  </li>
+                  <li class="menu-item">
+                    <a href="{% url 'statistik' %}" class="menu-link">
+                      <i class="menu-icon tf-icons bx bx-circle"></i>
+                      <div data-i18n="Statistik">Statistik</div>
+                    </a>
+                  </li>
+
                   <li class="menu-item">
                     <a href="{% url 'prediction' %}" class="menu-link">
                       <i class="menu-icon tf-icons bx bx-circle"></i>
@@ -197,10 +195,11 @@
 
     <script src="{% static 'assets/js/main.js' %}"></script>
     <script src="{% static 'assets/js/dashboards-ecommerce.js' %}"></script>
+    {% comment %}
     <script src="{% static 'assets/js/dashboards-analytics.js' %}"></script>
+    {% endcomment %}
     <script src="{% static 'assets/js/tables-datatables-basic.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
 
     {% block js %} {% endblock js %}
   </body>

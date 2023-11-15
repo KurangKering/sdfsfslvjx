@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 <div class="container-xxl flex-grow-1 container-p-y" x-data>
   <h4 class="py-3 breadcrumb-wrapper mb-4">
-    <span class="text-muted fw-light">Data </span> Prediction
+    <span class="text-muted fw-light">Data </span> Predictions
   </h4>
   <div class="row">
     <div class="col-12">
@@ -16,8 +16,20 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="table-responsive text-nowrap">
-            <table class="table" id="dtFlights">
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            x-show="$store.content.dataset.loading"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+
+          <div
+            class="table-responsive text-nowrap"
+            x-cloak
+            x-show="!$store.content.dataset.loading"
+          >
+            <table class="table" id="dtTrain">
               <thead class="table-light">
                 <tr>
                   <th>ID</th>
@@ -58,8 +70,19 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="table-responsive text-nowrap">
-            <table class="table" id="dtFlights">
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            x-show="$store.content.dataset.loading"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div
+            class="table-responsive text-nowrap"
+            x-cloak
+            x-show="!$store.content.dataset.loading"
+          >
+            <table class="table" id="dtTest">
               <thead class="table-light">
                 <tr>
                   <th>ID</th>
@@ -110,14 +133,70 @@
             <span class="visually-hidden">Loading...</span>
           </div>
 
-          <div x-show="!$store.content.LR.loading" x-cloak>
-            <p>
-              Train Accuracy :
-              <span x-text="$store.content.LR.train_acc"></span>
-            </p>
-            <p>
-              Test Accuracy : <span x-text="$store.content.LR.test_acc"></span>
-            </p>
+          <div x-cloak x-show="!$store.content.LR.loading">
+            <div id="radialChartLR"></div>
+          </div>
+
+          <div x-cloak x-show="!$store.content.LR.loading">
+            <ul class="p-0 m-0">
+              <li class="d-flex mb-4">
+                <div class="avatar avatar-sm flex-shrink-0 me-3">
+                  <span class="avatar-initial rounded-circle bg-label-primary"
+                    ><i class="bx bx-cube"></i
+                  ></span>
+                </div>
+                <div
+                  class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                >
+                  <div class="me-2">
+                    <p class="mb-0 lh-1">Execution Time</p>
+                  </div>
+                  <div
+                    class="item-progress"
+                    id="LR.execution_time"
+                    x-text="$store.content.LR.execution_time + ' seconds'"
+                  ></div>
+                </div>
+              </li>
+              <li class="d-flex mb-4">
+                <div class="avatar avatar-sm flex-shrink-0 me-3">
+                  <span class="avatar-initial rounded-circle bg-label-primary"
+                    ><i class="bx bx-cube"></i
+                  ></span>
+                </div>
+                <div
+                  class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                >
+                  <div class="me-2">
+                    <p class="mb-0 lh-1">Train Data Accuracy</p>
+                  </div>
+                  <div
+                    class="item-progress"
+                    id="LR.train_score"
+                    x-text="$store.content.LR.train_score + ' %'"
+                  ></div>
+                </div>
+              </li>
+              <li class="d-flex mb-4">
+                <div class="avatar avatar-sm flex-shrink-0 me-3">
+                  <span class="avatar-initial rounded-circle bg-label-primary"
+                    ><i class="bx bx-cube"></i
+                  ></span>
+                </div>
+                <div
+                  class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                >
+                  <div class="me-2">
+                    <p class="mb-0 lh-1">Test Data Accuracy</p>
+                  </div>
+                  <div
+                    class="item-progress"
+                    id="LR.test_score"
+                    x-text="$store.content.LR.test_score + ' %'"
+                  ></div>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -134,14 +213,80 @@
           </div>
         </div>
         <div class="card-body">
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            x-show="$store.content.DTR.loading"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+
           <div>
-            <p>
-              Train Accuracy :
-              <span x-text="$store.content.DTR.train_acc"></span>
-            </p>
-            <p>
-              Test Accuracy : <span x-text="$store.content.DTR.test_acc"></span>
-            </p>
+            <div x-cloak x-show="!$store.content.DTR.loading">
+              <div id="radialChartDTR"></div>
+            </div>
+
+            <div x-cloak x-show="!$store.content.DTR.loading">
+              <ul class="p-0 m-0">
+                <li class="d-flex mb-4">
+                  <div class="avatar avatar-sm flex-shrink-0 me-3">
+                    <span class="avatar-initial rounded-circle bg-label-primary"
+                      ><i class="bx bx-cube"></i
+                    ></span>
+                  </div>
+                  <div
+                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                  >
+                    <div class="me-2">
+                      <p class="mb-0 lh-1">Execution Time</p>
+                    </div>
+                    <div
+                      class="item-progress"
+                      id="DTR.execution_time"
+                      x-text="$store.content.DTR.execution_time  + ' seconds'"
+                    ></div>
+                  </div>
+                </li>
+                <li class="d-flex mb-4">
+                  <div class="avatar avatar-sm flex-shrink-0 me-3">
+                    <span class="avatar-initial rounded-circle bg-label-primary"
+                      ><i class="bx bx-cube"></i
+                    ></span>
+                  </div>
+                  <div
+                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                  >
+                    <div class="me-2">
+                      <p class="mb-0 lh-1">Train Data Accuracy</p>
+                    </div>
+                    <div
+                      class="item-progress"
+                      id="DTR.train_score"
+                      x-text="$store.content.DTR.train_score + ' %'"
+                    ></div>
+                  </div>
+                </li>
+                <li class="d-flex mb-4">
+                  <div class="avatar avatar-sm flex-shrink-0 me-3">
+                    <span class="avatar-initial rounded-circle bg-label-primary"
+                      ><i class="bx bx-cube"></i
+                    ></span>
+                  </div>
+                  <div
+                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                  >
+                    <div class="me-2">
+                      <p class="mb-0 lh-1">Test Data Accuracy</p>
+                    </div>
+                    <div
+                      class="item-progress"
+                      id="DTR.test_score"
+                      x-text="$store.content.DTR.test_score + ' %'"
+                    ></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -159,14 +304,78 @@
           </div>
         </div>
         <div class="card-body">
-          <div>
-            <p>
-              Train Accuracy :
-              <span x-text="$store.content.RFR.train_acc"></span>
-            </p>
-            <p>
-              Test Accuracy : <span x-text="$store.content.RFR.test_acc"></span>
-            </p>
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            x-show="$store.content.RFR.loading"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+
+          <div x-cloak x-show="!$store.content.RFR.loading">
+            <div id="radialChartRFR"></div>
+          </div>
+
+          <div x-cloak x-show="!$store.content.RFR.loading">
+            <ul class="p-0 m-0">
+              <li class="d-flex mb-4">
+                <div class="avatar avatar-sm flex-shrink-0 me-3">
+                  <span class="avatar-initial rounded-circle bg-label-primary"
+                    ><i class="bx bx-cube"></i
+                  ></span>
+                </div>
+                <div
+                  class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                >
+                  <div class="me-2">
+                    <p class="mb-0 lh-1">Execution Time</p>
+                  </div>
+                  <div
+                    class="item-progress"
+                    id="RFR.execution_time"
+                    x-text="$store.content.RFR.execution_time  + ' seconds'"
+                  ></div>
+                </div>
+              </li>
+              <li class="d-flex mb-4">
+                <div class="avatar avatar-sm flex-shrink-0 me-3">
+                  <span class="avatar-initial rounded-circle bg-label-primary"
+                    ><i class="bx bx-cube"></i
+                  ></span>
+                </div>
+                <div
+                  class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                >
+                  <div class="me-2">
+                    <p class="mb-0 lh-1">Train Data Accuracy</p>
+                  </div>
+                  <div
+                    class="item-progress"
+                    id="RFR.train_score"
+                    x-text="$store.content.RFR.train_score + ' %'"
+                  ></div>
+                </div>
+              </li>
+              <li class="d-flex mb-4">
+                <div class="avatar avatar-sm flex-shrink-0 me-3">
+                  <span class="avatar-initial rounded-circle bg-label-primary"
+                    ><i class="bx bx-cube"></i
+                  ></span>
+                </div>
+                <div
+                  class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                >
+                  <div class="me-2">
+                    <p class="mb-0 lh-1">Test Data Accuracy</p>
+                  </div>
+                  <div
+                    class="item-progress"
+                    id="RFR.test_score"
+                    x-text="$store.content.RFR.test_score + ' %'"
+                  ></div>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -183,14 +392,101 @@
           </div>
         </div>
         <div class="card-body">
-          <div>
-            <p>
-              Train Accuracy :
-              <span x-text="$store.content.ETR.train_acc"></span>
-            </p>
-            <p>
-              Test Accuracy : <span x-text="$store.content.ETR.test_acc"></span>
-            </p>
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            x-show="$store.content.ETR.loading"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+
+          <div x-cloak x-show="!$store.content.ETR.loading">
+            <div id="radialChartETR"></div>
+          </div>
+
+          <div x-cloak x-show="!$store.content.ETR.loading">
+            <ul class="p-0 m-0">
+              <li class="d-flex mb-4">
+                <div class="avatar avatar-sm flex-shrink-0 me-3">
+                  <span class="avatar-initial rounded-circle bg-label-primary"
+                    ><i class="bx bx-cube"></i
+                  ></span>
+                </div>
+                <div
+                  class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                >
+                  <div class="me-2">
+                    <p class="mb-0 lh-1">Execution Time</p>
+                  </div>
+                  <div
+                    class="item-progress"
+                    id="ETR.execution_time"
+                    x-text="$store.content.ETR.execution_time  + ' seconds'"
+                  ></div>
+                </div>
+              </li>
+              <li class="d-flex mb-4">
+                <div class="avatar avatar-sm flex-shrink-0 me-3">
+                  <span class="avatar-initial rounded-circle bg-label-primary"
+                    ><i class="bx bx-cube"></i
+                  ></span>
+                </div>
+                <div
+                  class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                >
+                  <div class="me-2">
+                    <p class="mb-0 lh-1">Train Data Accuracy</p>
+                  </div>
+                  <div
+                    class="item-progress"
+                    id="ETR.train_score"
+                    x-text="$store.content.ETR.train_score + ' %'"
+                  ></div>
+                </div>
+              </li>
+              <li class="d-flex mb-4">
+                <div class="avatar avatar-sm flex-shrink-0 me-3">
+                  <span class="avatar-initial rounded-circle bg-label-primary"
+                    ><i class="bx bx-cube"></i
+                  ></span>
+                </div>
+                <div
+                  class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2"
+                >
+                  <div class="me-2">
+                    <p class="mb-0 lh-1">Test Data Accuracy</p>
+                  </div>
+                  <div
+                    class="item-progress"
+                    id="ETR.test_score"
+                    x-text="$store.content.ETR.test_score + ' %'"
+                  ></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex align-items-center me-3">
+            <div class="card-title mb-0">
+              <h5 class="mb-0">Bar Chart</h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div
+            class="spinner-border text-primary"
+            role="status"
+            x-show="$store.content.barChart.loading"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div x-cloak x-show="!$store.content.barChart.loading">
+            <div id="barChart"></div>
           </div>
         </div>
       </div>
@@ -201,147 +497,317 @@
 <script>
   document.addEventListener("alpine:init", () => {
     Alpine.store("content", {
+      dataset: {
+        dummy: "xyz",
+        loading: true,
+      },
       LR: {
         loading: true,
-        train_acc: "",
-        test_acc: "",
+        execution_time: "",
+        train_score: "",
+        test_score: "",
       },
       RFR: {
-        train_acc: "",
-        test_acc: "",
+        loading: true,
+        execution_time: "",
+        train_score: "",
+        test_score: "",
       },
       ETR: {
-        train_acc: "",
-        test_acc: "",
+        loading: true,
+        execution_time: "",
+        train_score: "",
+        test_score: "",
       },
       DTR: {
-        train_acc: "",
-        test_acc: "",
+        loading: true,
+        execution_time: "",
+        train_score: "",
+        test_score: "",
+      },
+      barChart: {
+        loading: true,
       },
     });
   });
 
-  
-  let dtFlights;
-
-  function loadJson() {
-    const url = "{% url 'json_dataset_clean' %}";
-    return axios
-    .get(url)
-    .then(response => response);
-  }
-
   window.addEventListener("DOMContentLoaded", (event) => {
-    loadJson().then((response) => {
-      $("#dtDataNull").DataTable({
-        data: response.data.dataset_null,
-        columns: [
-          { data: "id" },
-          { data: "year" },
-          { data: "month" },
-          { data: "carrier__carrier" },
-          { data: "airport__airport" },
-          { data: "arr_flights" },
-          { data: "arr_del15" },
-          { data: "carrier_ct" },
-          { data: "weather_ct" },
-          { data: "nas_ct" },
-          { data: "security_ct" },
-          { data: "late_aircraft_ct" },
-          { data: "arr_cancelled" },
-          { data: "arr_diverted" },
-          { data: "arr_delay" },
-          { data: "carrier_delay" },
-          { data: "weather_delay" },
-          { data: "nas_delay" },
-          { data: "security_delay" },
-          { data: "late_aircraft_delay" },
-        ],
-      });
-      $("#dtDataDuplicate").DataTable({
-        data: response.data.dataset_duplicate,
-        columns: [
-          { data: "id" },
-          { data: "year" },
-          { data: "month" },
-          { data: "carrier__carrier" },
-          { data: "airport__airport" },
-          { data: "arr_flights" },
-          { data: "arr_del15" },
-          { data: "carrier_ct" },
-          { data: "weather_ct" },
-          { data: "nas_ct" },
-          { data: "security_ct" },
-          { data: "late_aircraft_ct" },
-          { data: "arr_cancelled" },
-          { data: "arr_diverted" },
-          { data: "arr_delay" },
-          { data: "carrier_delay" },
-          { data: "weather_delay" },
-          { data: "nas_delay" },
-          { data: "security_delay" },
-          { data: "late_aircraft_delay" },
-        ],
-      });
-      $("#dtFlights").DataTable({
-        data: response.data.dataset_clean,
-        columns: [
-          { data: "id" },
-          { data: "year" },
-          { data: "month" },
-          { data: "carrier__carrier" },
-          { data: "airport__airport" },
-          { data: "arr_flights" },
-          { data: "arr_del15" },
-          { data: "carrier_ct" },
-          { data: "weather_ct" },
-          { data: "nas_ct" },
-          { data: "security_ct" },
-          { data: "late_aircraft_ct" },
-          { data: "arr_cancelled" },
-          { data: "arr_diverted" },
-          { data: "arr_delay" },
-          { data: "carrier_delay" },
-          { data: "weather_delay" },
-          { data: "nas_delay" },
-          { data: "security_delay" },
-          { data: "late_aircraft_delay" },
-        ],
-      });
+    // showTrainTest();
+    // predictLR();
+    // predictDTR();
+    // predictRFR();
+    // predictETR();
 
-    })
-    .then(() => {
-      Alpine.store('is_loaded', true);
-    })
+    showTrainTest()
+      .then(predictLR)
+      .then(predictDTR)
+      .then(predictRFR)
+      .then(predictETR)
+      .then(barChart);
   });
 
-  document.addEventListener("DOMContentLoaded", () => {
-    predict("LR").then((response) => {
-      Alpine.store("content").LR.train_acc = response.data.train_score;
-      Alpine.store("content").LR.test_acc = response.data.test_score;
-      Alpine.store("content").LR.loading = false;
-    });
-    predict("RFR").then((response) => {
-      Alpine.store("content").RFR.train_acc = response.data.train_score;
-      Alpine.store("content").RFR.test_acc = response.data.test_score;
-    });
-    predict("ETR").then((response) => {
-      Alpine.store("content").RFR.train_acc = response.data.train_score;
-      Alpine.store("content").RFR.test_acc = response.data.test_score;
-    });
-    predict("DTR").then((response) => {
-      Alpine.store("content").RFR.train_acc = response.data.train_score;
-      Alpine.store("content").RFR.test_acc = response.data.test_score;
-    });
-  });
+  const loadJsonSplitData = () => {
+    const url = "{% url 'json_split_data' %}";
+    return axios.get(url).then((response) => response);
+  };
 
-  async function predict(type) {
+  const predict = (type) => {
     const url = `{% url 'json_predict' %}?type=${type}`;
-    return await axios.get(url).then((response) => {
+    return axios.get(url).then((response) => {
       console.log(response);
       return Promise.resolve(response);
     });
-  }
-  
+  };
+
+  const decimalToPercentage = (decimal) => {
+    return decimal * 100;
+  };
+
+  const showTrainTest = () => {
+    return loadJsonSplitData()
+      .then((response) => {
+        $("#dtTrain").DataTable({
+          data: response.data.data_train,
+          deferRender: true,
+          columns: [
+            { data: "id" },
+            { data: "year" },
+            { data: "month" },
+            { data: "carrier" },
+            { data: "airport" },
+            { data: "arr_flights" },
+            { data: "arr_del15" },
+            { data: "carrier_ct" },
+            { data: "weather_ct" },
+            { data: "nas_ct" },
+            { data: "security_ct" },
+            { data: "late_aircraft_ct" },
+            { data: "arr_cancelled" },
+            { data: "arr_diverted" },
+            { data: "arr_delay" },
+            { data: "carrier_delay" },
+            { data: "weather_delay" },
+            { data: "nas_delay" },
+            { data: "security_delay" },
+            { data: "late_aircraft_delay" },
+          ],
+        });
+        $("#dtTest").DataTable({
+          data: response.data.data_test,
+          deferRender: true,
+          columns: [
+            { data: "id" },
+            { data: "year" },
+            { data: "month" },
+            { data: "carrier" },
+            { data: "airport" },
+            { data: "arr_flights" },
+            { data: "arr_del15" },
+            { data: "carrier_ct" },
+            { data: "weather_ct" },
+            { data: "nas_ct" },
+            { data: "security_ct" },
+            { data: "late_aircraft_ct" },
+            { data: "arr_cancelled" },
+            { data: "arr_diverted" },
+            { data: "arr_delay" },
+            { data: "carrier_delay" },
+            { data: "weather_delay" },
+            { data: "nas_delay" },
+            { data: "security_delay" },
+            { data: "late_aircraft_delay" },
+          ],
+        });
+      })
+      .then(() => {
+        Alpine.store("content").dataset.loading = false;
+      });
+  };
+  const predictLR = () => {
+    return predict("LR").then((response) => {
+      Alpine.store("content").LR.train_score = response.data.train_score;
+      Alpine.store("content").LR.test_score = response.data.test_score;
+      Alpine.store("content").LR.loading = false;
+      radialChart(
+        document.querySelector("#radialChartLR"),
+        response.data.test_score
+      );
+      Alpine.store("content").LR.execution_time = response.data.execution_time;
+      Alpine.store("content").LR.train_score = response.data.train_score;
+      Alpine.store("content").LR.test_score = response.data.test_score;
+    });
+  };
+  const predictDTR = () => {
+    return predict("DTR").then((response) => {
+      Alpine.store("content").DTR.train_score = response.data.train_score;
+      Alpine.store("content").DTR.test_score = response.data.test_score;
+      Alpine.store("content").DTR.loading = false;
+      radialChart(
+        document.querySelector("#radialChartDTR"),
+        response.data.test_score
+      );
+      Alpine.store("content").DTR.execution_time = response.data.execution_time;
+      Alpine.store("content").DTR.train_score = response.data.train_score;
+      Alpine.store("content").DTR.test_score = response.data.test_score;
+    });
+  };
+  const predictRFR = () => {
+    return predict("RFR").then((response) => {
+      Alpine.store("content").RFR.train_score = response.data.train_score;
+      Alpine.store("content").RFR.test_score = response.data.test_score;
+      Alpine.store("content").RFR.loading = false;
+      radialChart(
+        document.querySelector("#radialChartRFR"),
+        response.data.test_score
+      );
+      Alpine.store("content").RFR.execution_time = response.data.execution_time;
+      Alpine.store("content").RFR.train_score = response.data.train_score;
+      Alpine.store("content").RFR.test_score = response.data.test_score;
+    });
+  };
+  const predictETR = () => {
+    return predict("ETR").then((response) => {
+      Alpine.store("content").ETR.train_score = response.data.train_score;
+      Alpine.store("content").ETR.test_score = response.data.test_score;
+      Alpine.store("content").ETR.loading = false;
+      radialChart(
+        document.querySelector("#radialChartETR"),
+        response.data.test_score
+      );
+      Alpine.store("content").ETR.execution_time = response.data.execution_time;
+      Alpine.store("content").ETR.train_score = response.data.train_score;
+      Alpine.store("content").ETR.test_score = response.data.test_score;
+    });
+  };
+
+  const barChart = () => {
+    Alpine.store("content").barChart.loading = false;
+
+    let test_score = [
+      Alpine.store("content").LR.test_score,
+      Alpine.store("content").DTR.test_score,
+      Alpine.store("content").RFR.test_score,
+      Alpine.store("content").ETR.test_score,
+    ];
+    let train_score = [
+      Alpine.store("content").LR.train_score,
+      Alpine.store("content").DTR.train_score,
+      Alpine.store("content").RFR.train_score,
+      Alpine.store("content").ETR.train_score,
+    ];
+
+    let o, e, r, t, a, s;
+    s =
+      ((o = config.colors.cardColor),
+      (e = config.colors.headingColor),
+      (r = config.colors.textMuted),
+      (t = config.colors.bodyColor),
+      (a = config.colors.borderColor),
+      "light");
+    var i = document.querySelector("#barChart"),
+      l = {
+        chart: { height: 250, type: "bar", toolbar: { show: !1 } },
+        plotOptions: {
+          bar: {
+            horizontal: !1,
+            columnWidth: "20%",
+            borderRadius: 3,
+            startingShape: "rounded",
+          },
+        },
+        dataLabels: { enabled: !1 },
+        colors: [config.colors.primary, config.colors_label.primary],
+        series: [
+          { name: "Test Score", data: test_score },
+          { name: "Train Score", data: train_score },
+        ],
+        grid: { borderColor: a, padding: { bottom: -8 } },
+        xaxis: {
+          categories: [
+            "Linear Regression",
+            "Decision Tree Regressor",
+            "Random Forest Regressor",
+            "Extra Trees Regressor",
+          ],
+          axisBorder: { show: !1 },
+          axisTicks: { show: !1 },
+          labels: { style: { colors: r } },
+        },
+        yaxis: {
+          min: 0,
+          max: 100,
+          tickAmount: 3,
+          labels: { style: { colors: r } },
+        },
+        legend: { show: !1 },
+        tooltip: {
+          y: {
+            formatter: function (o) {
+              return o + " %";
+            },
+          },
+        },
+      };
+    null !== i && new ApexCharts(i, l).render();
+  };
+
+  const radialChart = (element, percentage) => {
+    let o, e, r, t, a, s;
+    s =
+      ((o = config.colors.cardColor),
+      (e = config.colors.headingColor),
+      (r = config.colors.textMuted),
+      (t = config.colors.bodyColor),
+      (a = config.colors.borderColor),
+      "light");
+    var i = element,
+      l = {
+        chart: {
+          height: 500,
+          fontFamily: "IBM Plex Sans",
+          type: "radialBar",
+          sparkline: { show: !0 },
+        },
+        grid: { show: !1, padding: { top: -25 } },
+        plotOptions: {
+          radialBar: {
+            size: 100,
+            startAngle: -135,
+            endAngle: 135,
+            offsetY: 10,
+            hollow: { size: "55%" },
+            track: { strokeWidth: "50%", background: o },
+            dataLabels: {
+              value: {
+                offsetY: -15,
+                color: e,
+                fontFamily: "Rubik",
+                fontWeight: 500,
+                fontSize: "26px",
+              },
+              name: { fontSize: "15px", color: t, offsetY: 24 },
+            },
+          },
+        },
+        colors: [config.colors.danger],
+        fill: {
+          type: "gradient",
+          gradient: {
+            shade: "dark",
+            type: "horizontal",
+            shadeIntensity: 0.5,
+            gradientToColors: [config.colors.primary],
+            inverseColors: !0,
+            opacityFrom: 1,
+            opacityTo: 1,
+            stops: [0, 100],
+          },
+        },
+        stroke: { dashArray: 3 },
+        series: [percentage],
+        labels: ["Test Accuracy"],
+      };
+    null !== i && new ApexCharts(i, l).render();
+  };
 </script>
 {% endblock js%}
