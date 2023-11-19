@@ -1,12 +1,24 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 <div class="container-xxl flex-grow-1 container-p-y" x-data>
   <h4 class="py-3 breadcrumb-wrapper mb-4">
-    <span class="text-muted fw-light">Data </span> Cleaning
+    <span class="text-muted fw-light">Data </span> Cleaningdd
   </h4>
-  <div class="card" x-cloak x-show="$store.is_loaded">
+  <div class="card mb-3">
     <h5 class="card-header">Dataset Null</h5>
     <div class="card-body">
-      <div class="table-responsive text-nowrap">
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        x-show="!$store.is_loaded"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+
+      <div
+        class="table-responsive text-nowrap"
+        x-cloak
+        x-show="$store.is_loaded"
+      >
         <table class="table" id="dtDataNull">
           <thead class="table-light">
             <tr>
@@ -37,10 +49,23 @@
       </div>
     </div>
   </div>
-  <div class="card" x-cloak x-show="$store.is_loaded">
+  <div class="card mb-3">
     <h5 class="card-header">Dataset Duplicate</h5>
     <div class="card-body">
-      <div class="table-responsive text-nowrap">
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        x-cloak
+        x-show="!$store.is_loaded"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+
+      <div
+        class="table-responsive text-nowrap"
+        x-cloak
+        x-show="$store.is_loaded"
+      >
         <table class="table" id="dtDataDuplicate">
           <thead class="table-light">
             <tr>
@@ -71,10 +96,23 @@
       </div>
     </div>
   </div>
-  <div class="card" x-cloak x-show="$store.is_loaded">
+  <div class="card mb-3">
     <h5 class="card-header">Dataset Clean</h5>
     <div class="card-body">
-      <div class="table-responsive text-nowrap">
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        x-cloak
+        x-show="!$store.is_loaded"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+
+      <div
+        class="table-responsive text-nowrap"
+        x-cloak
+        x-show="$store.is_loaded"
+      >
         <table class="table" id="dtFlights">
           <thead class="table-light">
             <tr>
@@ -108,101 +146,99 @@
 </div>
 {% endblock content %} {% block js %}
 <script>
-  document.addEventListener('alpine:init', () => {
-    Alpine.store('is_loaded', false)
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("is_loaded", false);
   });
 
   let dtDataNull, dtDataDuplicate, dtFlights;
 
   function loadJson() {
     const url = "{% url 'json_dataset_clean' %}";
-    return axios
-    .get(url)
-    .then(response => response);
+    return axios.get(url).then((response) => response);
   }
 
   window.addEventListener("DOMContentLoaded", (event) => {
-    loadJson().then((response) => {
-      $("#dtDataNull").DataTable({
-        data: response.data.dataset_null,
-        columns: [
-          { data: "id" },
-          { data: "year" },
-          { data: "month" },
-          { data: "carrier__carrier" },
-          { data: "airport__airport" },
-          { data: "arr_flights" },
-          { data: "arr_del15" },
-          { data: "carrier_ct" },
-          { data: "weather_ct" },
-          { data: "nas_ct" },
-          { data: "security_ct" },
-          { data: "late_aircraft_ct" },
-          { data: "arr_cancelled" },
-          { data: "arr_diverted" },
-          { data: "arr_delay" },
-          { data: "carrier_delay" },
-          { data: "weather_delay" },
-          { data: "nas_delay" },
-          { data: "security_delay" },
-          { data: "late_aircraft_delay" },
-        ],
+    loadJson()
+      .then((response) => {
+        $("#dtDataNull").DataTable({
+          data: response.data.dataset_null,
+          columns: [
+            { data: "id" },
+            { data: "year" },
+            { data: "month" },
+            { data: "carrier__carrier" },
+            { data: "airport__airport" },
+            { data: "arr_flights" },
+            { data: "arr_del15" },
+            { data: "carrier_ct" },
+            { data: "weather_ct" },
+            { data: "nas_ct" },
+            { data: "security_ct" },
+            { data: "late_aircraft_ct" },
+            { data: "arr_cancelled" },
+            { data: "arr_diverted" },
+            { data: "arr_delay" },
+            { data: "carrier_delay" },
+            { data: "weather_delay" },
+            { data: "nas_delay" },
+            { data: "security_delay" },
+            { data: "late_aircraft_delay" },
+          ],
+        });
+        $("#dtDataDuplicate").DataTable({
+          data: response.data.dataset_duplicate,
+          columns: [
+            { data: "id" },
+            { data: "year" },
+            { data: "month" },
+            { data: "carrier__carrier" },
+            { data: "airport__airport" },
+            { data: "arr_flights" },
+            { data: "arr_del15" },
+            { data: "carrier_ct" },
+            { data: "weather_ct" },
+            { data: "nas_ct" },
+            { data: "security_ct" },
+            { data: "late_aircraft_ct" },
+            { data: "arr_cancelled" },
+            { data: "arr_diverted" },
+            { data: "arr_delay" },
+            { data: "carrier_delay" },
+            { data: "weather_delay" },
+            { data: "nas_delay" },
+            { data: "security_delay" },
+            { data: "late_aircraft_delay" },
+          ],
+        });
+        $("#dtFlights").DataTable({
+          data: response.data.dataset_clean,
+          columns: [
+            { data: "id" },
+            { data: "year" },
+            { data: "month" },
+            { data: "carrier__carrier" },
+            { data: "airport__airport" },
+            { data: "arr_flights" },
+            { data: "arr_del15" },
+            { data: "carrier_ct" },
+            { data: "weather_ct" },
+            { data: "nas_ct" },
+            { data: "security_ct" },
+            { data: "late_aircraft_ct" },
+            { data: "arr_cancelled" },
+            { data: "arr_diverted" },
+            { data: "arr_delay" },
+            { data: "carrier_delay" },
+            { data: "weather_delay" },
+            { data: "nas_delay" },
+            { data: "security_delay" },
+            { data: "late_aircraft_delay" },
+          ],
+        });
+      })
+      .then(() => {
+        Alpine.store("is_loaded", true);
       });
-      $("#dtDataDuplicate").DataTable({
-        data: response.data.dataset_duplicate,
-        columns: [
-          { data: "id" },
-          { data: "year" },
-          { data: "month" },
-          { data: "carrier__carrier" },
-          { data: "airport__airport" },
-          { data: "arr_flights" },
-          { data: "arr_del15" },
-          { data: "carrier_ct" },
-          { data: "weather_ct" },
-          { data: "nas_ct" },
-          { data: "security_ct" },
-          { data: "late_aircraft_ct" },
-          { data: "arr_cancelled" },
-          { data: "arr_diverted" },
-          { data: "arr_delay" },
-          { data: "carrier_delay" },
-          { data: "weather_delay" },
-          { data: "nas_delay" },
-          { data: "security_delay" },
-          { data: "late_aircraft_delay" },
-        ],
-      });
-      $("#dtFlights").DataTable({
-        data: response.data.dataset_clean,
-        columns: [
-          { data: "id" },
-          { data: "year" },
-          { data: "month" },
-          { data: "carrier__carrier" },
-          { data: "airport__airport" },
-          { data: "arr_flights" },
-          { data: "arr_del15" },
-          { data: "carrier_ct" },
-          { data: "weather_ct" },
-          { data: "nas_ct" },
-          { data: "security_ct" },
-          { data: "late_aircraft_ct" },
-          { data: "arr_cancelled" },
-          { data: "arr_diverted" },
-          { data: "arr_delay" },
-          { data: "carrier_delay" },
-          { data: "weather_delay" },
-          { data: "nas_delay" },
-          { data: "security_delay" },
-          { data: "late_aircraft_delay" },
-        ],
-      });
-
-    })
-    .then(() => {
-      Alpine.store('is_loaded', true);
-    })
   });
 </script>
 {% endblock js%}
