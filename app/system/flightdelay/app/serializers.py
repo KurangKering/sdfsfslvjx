@@ -25,8 +25,6 @@ class DatasetRawSerializer(serializers.ModelSerializer):
         model = DatasetRaw
         fields = '__all__'
 
-
-
 class DatasetCleanSerializer(serializers.ModelSerializer):
     carrier = serializers.CharField(source='carrier.carrier', read_only=True)
     carrier_name = serializers.CharField(source='carrier.carrier_name', read_only=True)

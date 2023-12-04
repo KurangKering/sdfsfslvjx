@@ -14,6 +14,40 @@ import seaborn as sns
 from io import StringIO
 
 
+dataset_clean = ''
+splited_data = DatasetSpliter(dataset_clean)
+regressor = RandomForestRegressor()
+regressor.train(splited_data)
+
+
+class DatasetSpliter :
+    def split(dataset_clean):
+        pass
+
+class Regressor:
+    def __init__(dataset_splited):
+        self.model = None
+        self.test_score = None
+        self.test_score = None
+        self.MSE = None
+        self.x_train, self.y_train, self.x_test, self.y_test = dataset_splited
+
+
+class RandomForestRegressor(Regressor) :
+    def fit():
+        self.model = RandomForestRegressor(n_estimators=100,max_depth=5, random_state=33)
+        self.model.fit(self.x_train, self.y_train)
+
+    def get_result():
+        self.train_score = self.model.score(self.x_train, self.y_train)
+        self.test_score = self.model.score(self.x_test, self.y_test)
+        self.y_pred = self.model.predict(self.x_test)
+        self.MSE = mean_squared_error(y_test, y_pred, multioutput='uniform_average')
+
+    def calculate():
+        self.fit()
+        self.get_result()
+
 
 def cleaning_dataset():
     dataset_raw = DatasetRaw.objects.all()
